@@ -1,0 +1,37 @@
+[project]
+title = Defold-Cutouts
+version = 1.0
+
+[bootstrap]
+main_collection = /main/main.collectionc
+
+[input]
+game_binding = /input/game.input_bindingc
+
+[display]
+width = 720
+height = 1280
+samples = 2
+high_dpi = 0
+
+[physics]
+scale = 0.02
+
+[script]
+shared_state = 1
+
+[ios]
+bundle_identifier = com.defold.defoldcutoutsext
+
+[osx]
+bundle_identifier = com.defold.defoldcutoutsext
+
+[android]
+package = com.defold.defoldcutoutsext
+immersive_mode = 1
+input_method = HiddenInputField
+
+[graphics]
+default_texture_min_filter = linear
+default_texture_mag_filter = linear
+

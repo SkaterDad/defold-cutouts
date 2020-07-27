@@ -1,0 +1,21 @@
+function init(self)
+      
+    msg.post(".", "acquire_input_focus")
+end
+
+local function set_text(text)
+    gui.set_text(gui.get_node("text1"), "Android says: \n" .. text)
+end
+
+function on_input(self, action_id, action)
+    if action_id == hash("touch") and action.pressed then
+        if gui.pick_node(gui.get_node("bn_all"), action.x, action.y) then
+            if cutouts then
+                local left, right, top, bottom = cutouts.get_safe_offsets()
+                set_text("Left = " .. left .. "\nRight = " .. right .. "\nTop = " .. top .. "\nBottom = " .. bottom)
+            else
+                set_text("Platform not supported")
+            end
+        end
+    end
+end

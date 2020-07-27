@@ -1,0 +1,22 @@
+- name: cutouts
+  type: table
+  desc: Provides display cutout information.
+  members:
+  - name: get_safe_offsets
+    type: function
+    desc: Gets safe offset values to avoid display cutouts.
+    returns:
+    - name: left
+      type: number
+      desc: Left offset
+    - name: right
+      type: number
+      desc: Right offset
+    - name: top
+      type: number
+      desc: Top offset
+    - name: bottom
+      type: number
+      desc: Bottom offset
+    examples:
+    - desc: local left, right, top, bottom = cutouts.get_safe_offsets()
