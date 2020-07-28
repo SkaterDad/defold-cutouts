@@ -12,32 +12,13 @@
 static JNIEnv* Attach()
 {
     JNIEnv* env;
-    JavaVM* vm = dmGraphics::GetNativeAndroidJavaVM();
-    vm->AttachCurrentThread(&env, NULL);
+    dmGraphics::GetNativeAndroidJavaVM()->AttachCurrentThread(&env, NULL);
     return env;
 }
 
-static bool Detach(JNIEnv* env)
+static void Detach()
 {
-    bool exception = (bool) env->ExceptionCheck();
-    env->ExceptionClear();
-    JavaVM* vm = dmGraphics::GetNativeAndroidJavaVM();
-    vm->DetachCurrentThread();
-    return !exception;
-}
-
-namespace {
-    struct AttachScope
-    {
-        JNIEnv* m_Env;
-        AttachScope() : m_Env(Attach())
-        {
-        }
-        ~AttachScope()
-        {
-            Detach(m_Env);
-        }
-    };
+    dmGraphics::GetNativeAndroidJavaVM()->DetachCurrentThread();
 }
 
 static jclass GetClass(JNIEnv* env, const char* classname)
@@ -56,9 +37,8 @@ static jclass GetClass(JNIEnv* env, const char* classname)
 
 static int GetOffsets(lua_State* L)
 {
-    AttachScope attachscope;
-    JNIEnv* env = attachscope.m_Env;
-    
+    JNIEnv* env = Attach();
+        
     jclass cls = GetClass(env, "com.defold.android.Cutouts");
     jmethodID get_offsets = env->GetStaticMethodID(cls, "GetOffsets", "(Landroid/app/Activity;)[I");
 
@@ -71,12 +51,13 @@ static int GetOffsets(lua_State* L)
     lua_pushnumber(L, elements[3]);
 
     env->ReleaseIntArrayElements(jOffsets, elements, JNI_ABORT);
+    Detach();
     
     return 4;
 }
 
 // Functions exposed to Lua
-static const luaL_reg Module_methods[] =
+static const luaL_reg CutoutExt_methods[] =
 {
     {"get_safe_offsets", GetOffsets},
     {0, 0}
@@ -87,7 +68,7 @@ static void LuaInit(lua_State* L)
     int top = lua_gettop(L);
 
     // Register lua names
-    luaL_register(L, MODULE_NAME, Module_methods);
+    luaL_register(L, MODULE_NAME, CutoutExt_methods);
 
     lua_pop(L, 1);
     assert(top == lua_gettop(L));

@@ -1,6 +1,6 @@
 [project]
 title = Defold-Cutouts
-version = 1.0
+version = 1.0.2
 
 [bootstrap]
 main_collection = /main/main.collectionc
